@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+    {% if category %}
+        {{ category.description|truncatewords:155 }}
+    {% else %}
+        Welcome to Jain.in where you can get anything you want...
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% if category %}
+        {{ category.name }} - Jain.in
+    {% else %}
+        See our New collections - Jain.in
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if category %}
+        <div class="row my_row_class">
+            <div class="mx-auto">
+                <p><a href="{% url 'shop:allProdCat' %}">Our Product Collections</a></p>
+            </div>
+        </div>
+    {% endif %}
+<div class="mx-auto">
+    {% if category %}
+        <img class="my_image" src="{{ category.image.url }}" alt = "{{ category.name }}">
+</div>
+<br>
+<div>
+        <h1 class="text-center my_title">{{ category.name }}</h1>
+        <p class="text-justify">{{ category.description }}</p>
+</div>
+    {% else %}
+        <div>
+            <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt = 'our products'>
+        </div>
+        <br>
+        <div>
+            <h1 class="text-center my_title">Our Products Collections</h1>
+            <p class="text-justify">At Jain.in, we’re passionate about bringing you high-quality products that enhance your lifestyle. Whether you’re looking for trendy fashion, unique home decor, or innovative gadgets, we’ve got something special just for you.</p>
+        </div>
+    {% endif %}
+
+        <div class="container">
+            <div class="row mx-auto">
+                {% for i in products.object_list %}
+                    <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4 ">
+                    <div class="card text-center" style="width: auto; height: 650px">
+                <a href="{{ i.get_url }}"><img src="{{ i.image.url }}" alt="{{ i.name }}" style="width: 400px; height: 500px;"></a>
+                <div class="card-body">
+                    <h4>{{ i.name }}</h4>
+                    <p>{{ i.price }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+        <div class="mx-auto">
+            {% if products.paginator.num_pages > 1 %}
+            <hr>
+            <div class="text-center">
+                {% for pg in products.paginator.page_range %}
+                <a href="?page={{ pg }}" class="btn btn-light btn-sm {% if products.number == pg %}active{% endif %}">{{ pg }}</a>
+            {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+{% endblock %}
